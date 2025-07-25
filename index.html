@@ -1,524 +1,92 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analisis Engagement Rate (ER) Mingguan (%)</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F0F4F8;
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 320px;
-            max-height: 400px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 400px;
-            }
-        }
-        .stat-card {
-            background-color: #ffffff;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
-        }
-        .brand-text-main { color: #0A2463; }
-        .brand-text-accent { color: #3E92CC; }
-        .brand-text-highlight { color: #D8315B; }
-        .brand-bg-main { background-color: #0A2463; }
-        .brand-bg-accent { background-color: #3E92CC; }
-        .input-table-container {
-            overflow-x: auto;
-            max-width: 100%;
-        }
-        .input-table th, .input-table td {
-            padding: 0.75rem;
-            border: 1px solid #E5E7EB;
-            white-space: nowrap;
-        }
-        .input-table input[type="text"],
-        .input-table input[type="number"],
-        .input-table input[type="date"],
-        .input-table select {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #D1D5DB;
-            border-radius: 0.375rem;
-        }
-        .input-table input[type="number"] {
-            text-align: right;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px; /* Full rounded */
-            font-size: 0.75rem; /* text-xs */
-            font-weight: 600; /* font-semibold */
-            color: white;
-            text-align: center;
-        }
-        .status-top-performer { background-color: #22C55E; /* green-500 */ }
-        .status-good { background-color: #FACC15; /* yellow-500 */ }
-        .status-average { background-color: #EF4444; /* red-500 */ }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bogor Beres - Analisis Engagement</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f9fcff; }
+  </style>
 </head>
 <body class="text-gray-800">
 
-    <div class="container mx-auto p-4 md:p-8">
-
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-extrabold brand-text-main mb-2">Analisis Engagement Rate (ER) Mingguan (%)</h1>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Visualisasi data performa konten Instagram Reels selama 7 hari.</p>
-        </header>
-
-        <section class="mb-12">
-            <div class="stat-card text-center max-w-md mx-auto">
-                <h2 class="text-xl font-semibold text-gray-500 mb-2">Rata-Rata Engagement Rate (ER)</h2>
-                <p class="text-7xl md:text-8xl font-extrabold brand-text-highlight" id="avgER">0.00%</p>
-                <p class="text-gray-500 mt-2">Berdasarkan data yang Anda masukkan.</p>
-            </div>
-        </section>
-
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-center brand-text-main mb-8">Ringkasan Metrik Utama</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 text-center">
-                <div class="stat-card">
-                    <p class="text-4xl mb-2">📄</p>
-                    <p class="text-2xl font-bold brand-text-accent" id="totalContent">0</p>
-                    <p class="text-gray-500">Total Konten</p>
-                </div>
-                <div class="stat-card">
-                    <p class="text-4xl mb-2">📈</p>
-                    <p class="text-2xl font-bold brand-text-accent" id="totalView">0</p>
-                    <p class="text-gray-500">Total Viewer</p>
-                </div>
-                <div class="stat-card">
-                    <p class="text-4xl mb-2">❤️</p>
-                    <p class="text-2xl font-bold brand-text-accent" id="totalLike">0</p>
-                    <p class="text-gray-500">Total Like</p>
-                </div>
-                <div class="stat-card">
-                    <p class="text-4xl mb-2">💬</p>
-                    <p class="text-2xl font-bold brand-text-accent" id="totalComment">0</p>
-                    <p class="text-gray-500">Total Komentar</p>
-                </div>
-                <div class="stat-card">
-                    <p class="text-4xl mb-2">💾</p>
-                    <p class="text-2xl font-bold brand-text-accent" id="totalSave">0</p>
-                    <p class="text-gray-500">Total Save</p>
-                </div>
-                <div class="stat-card">
-                    <p class="text-4xl mb-2">🔗</p>
-                    <p class="text-2xl font-bold brand-text-accent" id="totalShare">0</p>
-                    <p class="text-gray-500">Total Share</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="mb-12 stat-card p-6">
-            <h2 class="text-3xl font-bold text-center brand-text-main mb-6">Input Data Kinerja Konten</h2>
-            <p class="text-center text-gray-600 mb-4">Ubah angka-angka di tabel di bawah ini untuk melihat perubahan pada ringkasan metrik dan grafik secara real-time. Klik "Perbarui Data" setelah melakukan perubahan.</p>
-            <div class="input-table-container">
-                <table class="w-full input-table bg-white rounded-lg shadow-sm">
-                    <thead>
-                        <tr class="bg-gray-100 text-gray-700">
-                            <th>Tanggal</th>
-                            <th>Judul / Tema</th>
-                            <th>Format Konten</th>
-                            <th>Tujuan Konten</th>
-                            <th>Viewer (7 Hari)</th>
-                            <th>Like</th>
-                            <th>Komentar</th>
-                            <th>Save</th>
-                            <th>Share</th>
-                            <th>ER (%)</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dataTableBody">
-                        <!-- Data rows will be inserted here by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-            <div class="flex justify-center gap-4 mt-6">
-                <button id="addRowBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">Tambah Baris Data</button>
-                <button id="updateDataBtn" class="brand-bg-main hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">Perbarui Data</button>
-            </div>
-        </section>
-
-        <main class="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-            <div class="stat-card md:col-span-2">
-                <h3 class="text-2xl font-bold brand-text-main mb-1 text-center">Perbandingan Performa Berdasarkan Jenis Konten</h3>
-                <p class="text-center text-gray-600 mb-6">Grafik ini membandingkan total penonton (viewer) yang dihasilkan oleh setiap format konten, menunjukkan format mana yang paling efektif dalam menjangkau audiens.</p>
-                <div class="chart-container">
-                    <canvas id="formatPerformanceChart"></canvas>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <h3 class="text-2xl font-bold brand-text-main mb-1 text-center">Distribusi Engagement Berdasarkan Tujuan</h3>
-                <p class="text-center text-gray-600 mb-6">Grafik ini menunjukkan bagaimana total engagement (like, comment, save, share) didistribusikan di antara berbagai tujuan konten yang telah dibuat.</p>
-                <div class="chart-container">
-                    <canvas id="purposeDistributionChart"></canvas>
-                </div>
-            </div>
-
-            <div class="stat-card">
-                <h3 class="text-2xl font-bold brand-text-main mb-1 text-center">Tren Engagement Rate (ER) per Konten</h3>
-                <p class="text-center text-gray-600 mb-6">Grafik ini melacak Engagement Rate dari setiap konten yang Anda masukkan, diurutkan berdasarkan tanggal.</p>
-                <div class="chart-container">
-                    <canvas id="erTrendChart"></canvas>
-                </div>
-            </div>
-            
-        </main>
-
-        <footer class="text-center mt-12 text-gray-500 text-sm">
-            <p>Infografik Dihasilkan pada: <span id="generationDate"></span></p>
-            <p>Analisis ini didasarkan pada data kinerja website yang Anda masukkan. Semua visualisasi dihasilkan menggunakan Chart.js dan Tailwind CSS. Tidak ada SVG atau Mermaid JS yang digunakan dalam pembuatan laporan ini.</p>
-        </footer>
-
+  <!-- Header -->
+  <header class="bg-blue-100 py-6 shadow-md" data-aos="fade-down">
+    <div class="container mx-auto text-center">
+      <h1 class="text-4xl font-bold text-blue-700">Bogor Beres 📊</h1>
+      <p class="text-sm text-blue-500 mt-1">Visualisasi Data Engagement Mingguan</p>
     </div>
+  </header>
 
-    <script>
-        let myCharts = {}; // Object to store chart instances
+  <!-- Stats Cards -->
+  <section class="container mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="bg-white shadow rounded-lg p-6 text-center transform transition hover:scale-105 hover:shadow-lg" data-aos="zoom-in">
+      <div class="text-4xl">📈</div>
+      <p class="text-xl font-semibold mt-2 text-blue-700">12 Konten</p>
+      <p class="text-sm text-gray-500">Total Reels Minggu Ini</p>
+    </div>
+    <div class="bg-white shadow rounded-lg p-6 text-center transform transition hover:scale-105 hover:shadow-lg" data-aos="zoom-in" data-aos-delay="100">
+      <div class="text-4xl">❤️</div>
+      <p class="text-xl font-semibold mt-2 text-blue-700">5.8K Engagement</p>
+      <p class="text-sm text-gray-500">Like, Comment, Save, Share</p>
+    </div>
+    <div class="bg-white shadow rounded-lg p-6 text-center transform transition hover:scale-105 hover:shadow-lg" data-aos="zoom-in" data-aos-delay="200">
+      <div class="text-4xl">📊</div>
+      <p class="text-xl font-semibold mt-2 text-blue-700">8.2% ER</p>
+      <p class="text-sm text-gray-500">Rata-rata Engagement Rate</p>
+    </div>
+  </section>
 
-        const tooltipTitleCallback = (tooltipItems) => {
-            const item = tooltipItems[0];
-            let label = item.chart.data.labels[item.dataIndex];
-            if (Array.isArray(label)) {
-                return label.join(' ');
-            }
-            return label;
-        };
+  <!-- Chart -->
+  <section class="container mx-auto px-4 pb-12" data-aos="fade-up">
+    <h2 class="text-2xl font-bold text-center text-blue-800 mb-4">Grafik Performa</h2>
+    <div class="bg-white rounded-lg shadow p-6">
+      <canvas id="chartER" class="w-full h-64"></canvas>
+    </div>
+  </section>
 
-        const chartDefaultOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: '#1E1B18',
-                        font: {
-                            family: "'Inter', sans-serif"
-                        }
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        title: tooltipTitleCallback
-                    },
-                    backgroundColor: '#0A2463',
-                    titleFont: { size: 14, family: "'Inter', sans-serif" },
-                    bodyFont: { size: 12, family: "'Inter', sans-serif" },
-                    padding: 10
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { 
-                        color: '#1E1B18',
-                        font: { family: "'Inter', sans-serif" }
-                    },
-                    grid: { color: '#E5E7EB' }
-                },
-                x: {
-                    ticks: { 
-                        color: '#1E1B18',
-                        font: { family: "'Inter', sans-serif" }
-                    },
-                    grid: { display: false }
-                }
-            }
-        };
+  <!-- Footer -->
+  <footer class="bg-blue-100 text-center text-sm text-blue-600 py-4 mt-8" data-aos="fade-up">
+    <p>&#x1F5E1;&#xFE0F; Aksen Kujang — Karya Data oleh <strong>Bogor Beres</strong></p>
+    <p>&copy; 2025 All rights reserved.</p>
+  </footer>
 
-        const wrapLabel = (label, maxWidth) => {
-            if (typeof label !== 'string') return label; // Handle non-string labels
-            if (label.length <= maxWidth) return label;
+  <!-- Chart.js -->
+  <script>
+    const ctx = document.getElementById('chartER').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Konten 1', 'Konten 2', 'Konten 3', 'Konten 4'],
+        datasets: [{
+          label: 'Engagement Rate (%)',
+          data: [6.5, 8.2, 9.1, 7.4],
+          borderColor: '#3B82F6',
+          backgroundColor: 'rgba(59, 130, 246, 0.2)',
+          fill: true,
+          tension: 0.3,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { callback: value => value + '%' }
+          }
+        }
+      }
+    });
+  </script>
 
-            const words = label.split(' ');
-            let lines = [];
-            let currentLine = '';
-
-            for (let i = 0; i < words.length; i++) {
-                const word = words[i];
-                if ((currentLine + ' ' + word).trim().length > maxWidth && currentLine !== '') {
-                    lines.push(currentLine.trim());
-                    currentLine = word;
-                } else {
-                    currentLine += (currentLine === '' ? '' : ' ') + word;
-                }
-            }
-            lines.push(currentLine.trim());
-            return lines;
-        };
-
-        // Initial content data with 14 items
-        let contentData = [
-            { tanggal: '2025-07-23', judul: 'Panduan Lengkap SEO 2025', format: 'Reels', tujuan: 'Edukasi', viewer: 12500, like: 1100, komentar: 53, save: 88, share: 210 },
-            { tanggal: '2025-07-23', judul: 'Demo Produk X', format: 'Reels', tujuan: 'Sales', viewer: 8700, like: 750, komentar: 32, save: 46, share: 110 },
-            { tanggal: '2025-07-24', judul: 'Studi Kasus Implementasi Y', format: 'Reels', tujuan: 'Lead Generation', viewer: 5000, like: 400, komentar: 20, save: 30, share: 50 },
-            { tanggal: '2025-07-24', judul: 'Tips & Trik Digital Marketing', format: 'Reels', tujuan: 'Edukasi', viewer: 9000, like: 800, komentar: 40, save: 60, share: 90 },
-            { tanggal: '2025-07-25', judul: 'Strategi Konten Video', format: 'Reels', tujuan: 'Edukasi', viewer: 7000, like: 600, komentar: 30, save: 50, share: 80 },
-            { tanggal: '2025-07-25', judul: 'Analisis Tren Pasar', format: 'Reels', tujuan: 'Informasi', viewer: 10000, like: 900, komentar: 45, save: 70, share: 120 },
-            { tanggal: '2025-07-26', judul: 'Fitur Baru Aplikasi Kami', format: 'Reels', tujuan: 'Sales', viewer: 6000, like: 500, komentar: 25, save: 40, share: 60 },
-            { tanggal: '2025-07-26', judul: 'Webinar: Optimasi Konversi', format: 'Reels', tujuan: 'Lead Generation', viewer: 8000, like: 700, komentar: 35, save: 55, share: 90 },
-            { tanggal: '2025-07-27', judul: 'Panduan Lengkap Google Analytics', format: 'Reels', tujuan: 'Edukasi', viewer: 11000, like: 1000, komentar: 50, save: 80, share: 150 },
-            { tanggal: '2025-07-27', judul: 'Testimoni Klien Sukses', format: 'Reels', tujuan: 'Branding', viewer: 4500, like: 350, komentar: 15, save: 25, share: 40 },
-            { tanggal: '2025-07-28', judul: 'Dampak AI pada Marketing', format: 'Reels', tujuan: 'Edukasi', viewer: 9500, like: 850, komentar: 42, save: 65, share: 100 },
-            { tanggal: '2025-07-28', judul: 'Peluncuran Fitur Baru', format: 'Reels', tujuan: 'Sales', viewer: 7500, like: 650, komentar: 30, save: 50, share: 80 },
-            { tanggal: '2025-07-29', judul: 'Infografik Statistik Digital', format: 'Reels', tujuan: 'Informasi', viewer: 10500, like: 950, komentar: 48, save: 75, share: 130 },
-            { tanggal: '2025-07-29', judul: 'Q&A Sesi Pakar SEO', format: 'Reels', tujuan: 'Edukasi', viewer: 6500, like: 550, komentar: 28, save: 45, share: 70 }
-        ];
-
-        const dataTableBody = document.getElementById('dataTableBody');
-        const addRowBtn = document.getElementById('addRowBtn');
-        const updateDataBtn = document.getElementById('updateDataBtn');
-
-        const getStatus = (er) => {
-            if (er >= 10) {
-                return '<span class="status-badge status-top-performer">Top Performer</span>';
-            } else if (er >= 5) {
-                return '<span class="status-badge status-good">Good</span>';
-            } else {
-                return '<span class="status-badge status-average">Average</span>';
-            }
-        };
-
-        const renderTable = () => {
-            dataTableBody.innerHTML = '';
-            contentData.forEach((data, index) => {
-                const row = dataTableBody.insertRow();
-                row.dataset.index = index;
-
-                const erValue = data.viewer > 0 ? ((data.like + data.komentar + data.save + data.share) / data.viewer * 100) : 0;
-                const erFormatted = erValue.toFixed(2);
-                const statusHtml = getStatus(erValue);
-
-                row.innerHTML = `
-                    <td><input type="date" value="${data.tanggal}" class="p-2 border rounded w-full"></td>
-                    <td><input type="text" value="${data.judul}" class="p-2 border rounded w-full"></td>
-                    <td><input type="text" value="${data.format}" class="p-2 border rounded w-full"></td>
-                    <td><input type="text" value="${data.tujuan}" class="p-2 border rounded w-full"></td>
-                    <td><input type="number" value="${data.viewer}" class="p-2 border rounded w-full text-right"></td>
-                    <td><input type="number" value="${data.like}" class="p-2 border rounded w-full text-right"></td>
-                    <td><input type="number" value="${data.komentar}" class="p-2 border rounded w-full text-right"></td>
-                    <td><input type="number" value="${data.save}" class="p-2 border rounded w-full text-right"></td>
-                    <td><input type="number" value="${data.share}" class="p-2 border rounded w-full text-right"></td>
-                    <td><input type="text" value="${erFormatted}%" class="p-2 border rounded w-full text-right bg-gray-100" readonly></td>
-                    <td>${statusHtml}</td>
-                    <td><button class="delete-row-btn bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded-lg text-sm">Hapus</button></td>
-                `;
-            });
-
-            document.querySelectorAll('.delete-row-btn').forEach(button => {
-                button.onclick = (event) => {
-                    const row = event.target.closest('tr');
-                    const index = parseInt(row.dataset.index);
-                    contentData.splice(index, 1);
-                    updateAllData();
-                };
-            });
-        };
-
-        const readTableData = () => {
-            const newContentData = [];
-            dataTableBody.querySelectorAll('tr').forEach(row => {
-                const inputs = row.querySelectorAll('input');
-                newContentData.push({
-                    tanggal: inputs[0].value,
-                    judul: inputs[1].value,
-                    format: inputs[2].value,
-                    tujuan: inputs[3].value,
-                    viewer: parseInt(inputs[4].value) || 0,
-                    like: parseInt(inputs[5].value) || 0,
-                    komentar: parseInt(inputs[6].value) || 0,
-                    save: parseInt(inputs[7].value) || 0,
-                    share: parseInt(inputs[8].value) || 0
-                });
-            });
-            contentData = newContentData;
-        };
-
-        const calculateSummaryMetrics = () => {
-            let totalView = 0;
-            let totalLike = 0;
-            let totalComment = 0;
-            let totalSave = 0;
-            let totalShare = 0;
-            let totalER = 0;
-            let validERCount = 0;
-
-            contentData.forEach(item => {
-                totalView += item.viewer;
-                totalLike += item.like;
-                totalComment += item.komentar;
-                totalSave += item.save;
-                totalShare += item.share;
-
-                const engagementSum = item.like + item.komentar + item.save + item.share;
-                if (item.viewer > 0) {
-                    totalER += (engagementSum / item.viewer) * 100;
-                    validERCount++;
-                }
-            });
-
-            document.getElementById('totalContent').textContent = contentData.length;
-            document.getElementById('totalView').textContent = (totalView / 1000).toFixed(1) + 'K';
-            document.getElementById('totalLike').textContent = (totalLike / 1000).toFixed(1) + 'K';
-            document.getElementById('totalComment').textContent = totalComment;
-            document.getElementById('totalSave').textContent = totalSave;
-            document.getElementById('totalShare').textContent = totalShare;
-            document.getElementById('avgER').textContent = (validERCount > 0 ? (totalER / validERCount).toFixed(2) : '0.00') + '%';
-        };
-
-        const updateCharts = () => {
-            // Chart 1: Perbandingan Performa Berdasarkan Jenis Konten
-            const formatMap = {};
-            contentData.forEach(item => {
-                formatMap[item.format] = (formatMap[item.format] || 0) + item.viewer;
-            });
-            const formatLabels = Object.keys(formatMap).map(label => wrapLabel(label, 16));
-            const formatData = Object.values(formatMap);
-
-            if (myCharts.formatPerformanceChart) myCharts.formatPerformanceChart.destroy();
-            myCharts.formatPerformanceChart = new Chart(document.getElementById('formatPerformanceChart').getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: formatLabels,
-                    datasets: [{
-                        label: 'Total Viewer',
-                        data: formatData,
-                        backgroundColor: ['#3E92CC', '#0A2463', '#D8315B', '#6B7280', '#FCA311', '#14213d'],
-                        borderColor: ['#0A2463', '#3E92CC', '#A02040', '#4B5563', '#CC8800', '#000000'],
-                        borderWidth: 2,
-                        borderRadius: 5
-                    }]
-                },
-                options: chartDefaultOptions
-            });
-
-            // Chart 2: Distribusi Engagement Berdasarkan Tujuan
-            const purposeMap = {};
-            contentData.forEach(item => {
-                const engagementSum = item.like + item.komentar + item.save + item.share;
-                purposeMap[item.tujuan] = (purposeMap[item.tujuan] || 0) + engagementSum;
-            });
-            const purposeLabels = Object.keys(purposeMap).map(label => wrapLabel(label, 16));
-            const purposeData = Object.values(purposeMap);
-
-            if (myCharts.purposeDistributionChart) myCharts.purposeDistributionChart.destroy();
-            myCharts.purposeDistributionChart = new Chart(document.getElementById('purposeDistributionChart').getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: purposeLabels,
-                    datasets: [{
-                        label: 'Total Engagement',
-                        data: purposeData,
-                        backgroundColor: ['#3E92CC', '#0A2463', '#D8315B', '#6B7280', '#FCA311', '#14213d'],
-                        borderColor: '#FFFFFF',
-                        borderWidth: 3,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: '#1E1B18',
-                                font: { family: "'Inter', sans-serif" },
-                                padding: 20
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                title: tooltipTitleCallback
-                            },
-                            backgroundColor: '#0A2463',
-                            titleFont: { size: 14, family: "'Inter', sans-serif" },
-                            bodyFont: { size: 12, family: "'Inter', sans-serif" },
-                            padding: 10
-                        }
-                    }
-                }
-            });
-
-            // Chart 3: Tren Engagement Rate (ER) per Konten
-            // Sort data by date for better trend visualization
-            const sortedContentData = [...contentData].sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
-            const erLabels = sortedContentData.map(item => wrapLabel(`${item.tanggal} - ${item.judul}`, 16));
-            const erData = sortedContentData.map(item => item.viewer > 0 ? ((item.like + item.komentar + item.save + item.share) / item.viewer * 100) : 0);
-
-            if (myCharts.erTrendChart) myCharts.erTrendChart.destroy();
-            myCharts.erTrendChart = new Chart(document.getElementById('erTrendChart').getContext('2d'), {
-                type: 'line',
-                data: {
-                    labels: erLabels,
-                    datasets: [{
-                        label: 'Engagement Rate (%)',
-                        data: erData,
-                        fill: true,
-                        backgroundColor: 'rgba(62, 146, 204, 0.2)',
-                        borderColor: '#3E92CC',
-                        pointBackgroundColor: '#0A2463',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: '#0A2463',
-                        tension: 0.1,
-                        borderWidth: 3
-                    }]
-                },
-                options: chartDefaultOptions
-            });
-        };
-
-        const updateAllData = () => {
-            renderTable();
-            calculateSummaryMetrics();
-            updateCharts();
-        };
-
-        addRowBtn.addEventListener('click', () => {
-            contentData.push({ tanggal: new Date().toISOString().slice(0,10), judul: '', format: '', tujuan: '', viewer: 0, like: 0, komentar: 0, save: 0, share: 0 });
-            updateAllData();
-        });
-
-        updateDataBtn.addEventListener('click', () => {
-            readTableData();
-            updateAllData();
-        });
-
-        // Initial render on page load
-        window.onload = () => {
-            document.getElementById('generationDate').textContent = new Date().toLocaleDateString('id-ID', {
-                day: 'numeric', month: 'long', year: 'numeric'
-            });
-            updateAllData();
-        };
-    </script>
+  <script>AOS.init();</script>
 </body>
 </html>
